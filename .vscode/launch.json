@@ -14,6 +14,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "fetch",
+            "cwd": "${workspaceFolder}/fetch-service",
+            "program": "${workspaceFolder}/fetch-service/index.js",
+            "env": {
+                "track":"car"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "web",
             "cwd": "${workspaceFolder}/web-service",
             "program": "${workspaceFolder}/web-service/index.js"

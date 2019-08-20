@@ -4,6 +4,7 @@ const scrapper = require("./scrap");
 const screen = require("./screenshot");
 const s3 = require("./s3");
 const db = require("./db");
+const metric = require("../shared/metric");
 
 async function handleMessages() {
   while (true) {
@@ -18,11 +19,21 @@ async function handleMessages() {
 
             for (let i = 0; i < pages.length; i++) {
               const page = pages[i];
+
+              const startScrap = Date.now();
               const dataAboutPage = scrapper.scrap(page);
+              const endScrap = Date.now();
+              metric.sendMetric("process-service", "time-scrap", endScrap-startScrap, []);
+
               dataAboutPage.track = jsonMsg.track;
               dataAboutPage.link = jsonMsg.urls[i];
 
+              const startScreenshot = Date.now();
               const image = await screen.screenshot(dataAboutPage.link);
+              const endScreenshot = Date.now();
+              metric.sendMetric("process-service", "time-screenshot", endScreenshot-startScreenshot, []);
+
+
               const imageS3Url = await s3.putImage(image);
               dataAboutPage.s3ImageUrl = imageS3Url;
 
