@@ -6,7 +6,7 @@ module.exports = {
       cwd:"./fetch-service",
       autorestart: true,
       env:{
-        track:"javascript"
+        track:"microservice"
       }
     },
     {
